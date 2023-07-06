@@ -51,6 +51,25 @@ class GrapheSexe():
         chart_sexe=st.pyplot(fig)
         
         return chart_sexe
+    # nombre de producteur par sexe
+    def nombre_producteur(self,zone,union):
+        forms=decoupage(self.df)
+        df=forms[0]
+        df=df.drop_duplicates(subset=['code'],keep='last')
+        if zone=="Tous" and union=="Tous":
+            df=df.groupby('Sexe').size().reset_index()
+        elif zone=="Tous" and union!="Tous":
+            df=df.loc[df['Union']==union]
+            df=df.groupby('Sexe').size().reset_index()
+        elif zone!="Tous" and union=="Tous":
+            df=df.loc[df['Zone']==zone]
+            df=df.groupby('Sexe').size().reset_index()
+        else:
+            df=df.loc[df['Zone']==zone]
+            df=df.loc[df['Union']==union]
+            df=df.groupby('Sexe').size().reset_index()
+        df.columns=['Sexe','Nombre']
+        return df
 #graphe pour la repartition des producteurs par zone    
 class GrapheProducteur():
     def __init__(self,df):
@@ -76,7 +95,21 @@ class GrapheProducteur():
         ax.tick_params(axis='x', rotation=45)
         
         chart_zone=st.pyplot(fig)
-        return chart_zone,df
+        return chart_zone
+    #nombre de producteur par zone
+    def nombre_producteur_zone(self,union):
+        forms=decoupage(self.df)
+        df=forms[0]
+        df=df.drop_duplicates(subset=['code'],keep='last')
+        if union=="Tous":
+            df=df.groupby('Zone').size().reset_index()
+        else:
+            df=df.loc[df['Union']==union]
+            df=df.groupby('Zone').size().reset_index()
+        df.columns=['Zone','nombre']
+        df=df.pivot_table(columns='Zone', values='nombre')
+        return df
+    
      
 
 

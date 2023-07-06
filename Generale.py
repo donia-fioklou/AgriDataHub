@@ -26,8 +26,10 @@ if upload_file:
     graphe_sexe = GrapheSexe(df)
     st.markdown("### Répartition démographique par sexe dans la zone "+select_zone)
     chart_sexe = graphe_sexe.graph_sexe(select_zone,select_cooperative)
+    st.dataframe(graphe_sexe.nombre_producteur(select_zone,select_cooperative))
     
     graphe_producteur= GrapheProducteur(df)
     st.markdown("### Répartition des producteurs par zone dans la coopérative "+select_cooperative) 
     chart_producteur=graphe_producteur.graph_producteur_zone(select_cooperative) 
-    st.dataframe(df)
+    st.dataframe(graphe_producteur.nombre_producteur_zone(select_cooperative))
+    
