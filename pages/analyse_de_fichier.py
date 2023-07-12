@@ -4,24 +4,32 @@ import matplotlib.pyplot as plt
 
 
 
-st.markdown("### Importer un fichier et resortir les incohérences")
 
-file_upload=st.file_uploader(label="uploader un ficher",type=['xlsx'])
 
 # decoupage du dataframe apres chaque colonne Fin
 
+def delete_additionnel_col(df):
+    cols_to_delete = ['Formulaire', 'Type formualaire', 'Unnamed']
+    cols_to_drop = [col for col in df.columns if any(keyword in col for keyword in cols_to_delete)]
+    df.drop(cols_to_drop, axis=1, inplace=True)
+    return df
+
+    
+    
 def decoupage(df):
+    df=delete_additionnel_col(df)
     forms=[]
     col_name=[]
+    
     for col in df.columns:
         col_name.append(col)
-        if 'Fin' in col:
+        if 'Fin'in col:
             forms.append(df.loc[:,col_name])
             col_name=[]
     return forms
 
 #liste de form concatener avec l'id
-def concat_id():
+def concat_id(df):
     forms=decoupage(df)
     forms_with_id=[]
     for form in forms:  
@@ -47,17 +55,7 @@ def analyse_incoherence(form):
         
     
 
-if file_upload: 
-    df= pd.read_excel(file_upload)
-    st.dataframe(df)
-    forms=decoupage(df)
-    forms_with_id=concat_id()    
-    st.dataframe(forms[0]) 
-        
-    for form in forms_with_id:
-        st.dataframe(form) 
-        #incoherence=analyse_incoherence(form)
-        st.write('-------------------')
+
         
             
             
